@@ -24,7 +24,7 @@ rules with a React dashboard and an interactive Three.js threat map.
 
 ## Run locally
 
-Install backend dependencies and start the API:
+Install dependencies and start the local development servers:
 
 ```powershell
 cd C:\Projects\CodeShield
@@ -40,8 +40,25 @@ npm install
 npm run dev
 ```
 
-Open `http://localhost:5173` in your browser. The API is available at
-`http://localhost:4000` and exposes `/api/health` and `/api/analyze`.
+Open `http://localhost:5173` in your browser. The dashboard performs the
+deterministic scan in the browser. The optional `/api/llm` endpoint is only
+used to request AI root-cause analysis (RCA) and fixes.
+
+## Vercel deployment and optional OpenRouter AI
+
+Deploy the repository as a Vite frontend. In Vercel Project Settings, add:
+
+```text
+OPENROUTER_API_KEY=sk-or-v1-...
+OPENROUTER_MODEL=thinkingmachines/inkling:free
+```
+
+`OPENROUTER_API_KEY` is optional. If it is not configured, CodeShield still
+performs local analysis and skips the AI RCA/fix request. Keep this key as a
+server-side Vercel environment variable; never expose it as `VITE_*`.
+
+The Vercel function in `api/llm.ts` forwards only the findings to OpenRouter,
+so the full backend does not need to run in production.
 
 ## Testing
 
